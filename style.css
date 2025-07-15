@@ -9,6 +9,10 @@ body {
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  display: flex;               /* Para que los semestres estén en fila horizontal */
+  gap: 1.5rem;                /* Espacio entre semestres */
+  overflow-x: auto;           /* Scroll horizontal si hay muchos semestres */
+  padding-bottom: 1rem;       /* Espacio para el scroll */
 }
 
 h1 {
@@ -23,23 +27,35 @@ h1 {
   background-color: white;
   border-left: 4px solid #3b82f6;
   padding: 1rem;
-  margin-bottom: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  flex-direction: column;     /* Semestre en columna */
+  min-width: 250px;           /* Ancho fijo para que se vean bien */
+  max-height: 600px;          /* Altura fija, opcional */
 }
 
 .semestre h2 {
   font-size: 1.3rem;
   color: #1e3a8a;
-  margin-bottom: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+/* Lista vertical de ramos dentro del semestre */
+.ramos-lista {
+  display: flex;
+  flex-direction: column;    /* Ramos en columna */
+  gap: 0.35rem;              /* Separación vertical entre ramos */
+  overflow-y: auto;          /* Scroll vertical si muchos ramos */
+  max-height: 500px;         /* Máximo alto para la lista */
+  padding-right: 0.3rem;     /* Para evitar que scroll tape texto */
 }
 
 /* Botones de ramos */
 .ramo {
-  display: inline-block;
   background: #cce4ff;
   padding: 0.6rem 0.9rem;
-  margin: 0.35rem;
   border-radius: 6px;
   border: 2px solid #60a5fa;
   color: #1e40af;
@@ -48,6 +64,7 @@ h1 {
   transition: all 0.2s ease-in-out;
   font-size: 0.95rem;
   user-select: none;
+  text-align: left;           /* Que el texto quede a la izquierda */
 }
 
 .ramo:hover:not(.bloqueado):not(.aprobado) {
