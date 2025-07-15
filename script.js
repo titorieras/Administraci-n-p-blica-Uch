@@ -1,4 +1,5 @@
 const ramos = [
+
   // PRIMER AÑO - Semestre I
   { id: "matematica1", nombre: "Matemática para la Gestión I", semestre: "1", requisitos: [] },
   { id: "gestion_publica", nombre: "Introducción a la Gestión Pública", semestre: "1", requisitos: [] },
@@ -95,55 +96,5 @@ const ramos = [
     "evaluacion_proyectos", "etica_direccion", "eco_sector_publico", "control_eval", "analisis_integrado",
     "planificacion", "negociacion", "gestion_territorial"
   ] },
+
 ];
-
-const mallaDiv = document.getElementById("malla");
-
-function crearMalla() {
-  const semestres = {};
-  ramos.forEach(r => {
-    if (!semestres[r.semestre]) semestres[r.semestre] = [];
-    semestres[r.semestre].push(r);
-  });
-
-  for (const [semestre, lista] of Object.entries(semestres)) {
-    const div = document.createElement("div");
-    div.className = "semestre";
-    const h2 = document.createElement("h2");
-    h2.textContent = `Semestre ${semestre}`;
-    div.appendChild(h2);
-
-    lista.forEach(r => {
-      const btn = document.createElement("button");
-      btn.textContent = r.nombre;
-      btn.id = r.id;
-      btn.className = "ramo";
-      if (r.requisitos.length > 0) btn.classList.add("bloqueado");
-      btn.onclick = () => aprobarRamo(r);
-      div.appendChild(btn);
-    });
-
-    mallaDiv.appendChild(div);
-  }
-}
-
-function aprobarRamo(ramo) {
-  const btn = document.getElementById(ramo.id);
-  if (btn.classList.contains("bloqueado") || btn.classList.contains("aprobado")) return;
-
-  btn.classList.add("aprobado");
-
-  ramos.forEach(r => {
-    if (r.requisitos.includes(ramo.id)) {
-      const desbloquear = r.requisitos.every(pr => {
-        return document.getElementById(pr)?.classList.contains("aprobado");
-      });
-      if (desbloquear) {
-        document.getElementById(r.id)?.classList.remove("bloqueado");
-      }
-    }
-  });
-}
-
-crearMalla();
-
