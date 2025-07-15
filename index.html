@@ -1,17 +1,194 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Malla Interactiva - Administración Pública UChile</title>
-<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Malla Interactiva - Administración Pública</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 2rem;
+    color: #1f2937;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+  }
+
+  h1 {
+    text-align: center;
+    color: #1d4ed8;
+    margin-bottom: 2rem;
+    font-size: 2.2rem;
+  }
+
+  #malla {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .semestre {
+    background-color: white;
+    border-left: 4px solid #3b82f6;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    min-width: 280px;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+
+  .semestre h2 {
+    font-size: 1.3rem;
+    color: #1e3a8a;
+    margin-bottom: 1rem;
+  }
+
+  .ramos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .ramo {
+    background: #cce4ff;
+    padding: 0.6rem 0.9rem;
+    border-radius: 6px;
+    border: 2px solid #60a5fa;
+    color: #1e40af;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 0.95rem;
+    user-select: none;
+    text-align: left;
+    margin: 0;
+  }
+
+  .ramo:hover:not(.bloqueado):not(.aprobado) {
+    background: #99ccff;
+    transform: scale(1.03);
+  }
+
+  .ramo.aprobado {
+    background: #d1e7dd;
+    border-color: #198754;
+    color: #0f5132;
+    text-decoration: line-through;
+    cursor: default;
+  }
+
+  .ramo.bloqueado {
+    background: #e5e7eb;
+    border-color: #cbd5e1;
+    color: #6b7280;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+</style>
 </head>
 <body>
 <div class="container">
   <h1>Malla Interactiva - Administración Pública</h1>
-  <div id="malla"><div>
+  <div id="malla"></div>
 </div>
 
-  <script src="script.js"></script>
+<script>
+  const ramos = [
+    { id: "matematica1", nombre: "Matemática para la Gestión I", semestre: "1", requisitos: [] },
+    { id: "gestion_publica", nombre: "Introducción a la Gestión Pública", semestre: "1", requisitos: [] },
+    { id: "curso_libre1", nombre: "Curso Libre", semestre: "1", requisitos: [] },
+
+    { id: "matematica2", nombre: "Matemática para la Gestión II", semestre: "2", requisitos: ["matematica1"] },
+    { id: "cfg1", nombre: "CFG", semestre: "2", requisitos: [] },
+    { id: "evolucion_admin", nombre: "Evolución y Complejidad de la Administración Pública", semestre: "2", requisitos: ["gestion_publica"] },
+  ];
+
+  let aprobados = new Set(JSON.parse(localStorage.getItem('aprobados')) || []);
+
+  const mallaDiv = document.getElementById('malla');
+
+  function esCFGoCursoLibre(ramo) {
+    const nombre = ramo.nombre.toLowerCase();
+    return nombre.includes('cfg') || nombre.includes('curso libre');
+  }
+
+  function semestreAnterior(sem) {
+    return sem > 1 ? (sem - 1).toString() : null;
+  }
+
+  function todosAprobadosEnSemestre(semestre) {
+    return ramos
+      .filter(r => r.semestre === semestre.toString())
+      .filter(r => !esCFGoCursoLibre(r))
+      .every(r => aprobados.has(r.id));
+  }
+
+  function puedeDesbloquear(ramo) {
+    if (aprobados.has(ramo.id)) return true;
+    if (esCFGoCursoLibre(ramo)) return true;
+
+    const semAnt = semestreAnterior(parseInt(ramo.semestre));
+    if (!semAnt) return true;
+
+    return todosAprobadosEnSemestre(semAnt);
+  }
+
+  function renderMalla() {
+    mallaDiv.innerHTML = '';
+
+    const semestres = [...new Set(ramos.map(r => r.semestre))].sort((a,b) => a-b);
+
+    semestres.forEach(sem => {
+      const divSemestre = document.createElement('div');
+      divSemestre.className = 'semestre';
+
+      const h2 = document.createElement('h2');
+      h2.textContent = `Semestre ${sem}`;
+      divSemestre.appendChild(h2);
+
+      const listaRamos = document.createElement('div');
+      listaRamos.className = 'ramos-lista';
+
+      ramos.filter(r => r.semestre === sem)
+        .forEach(ramo => {
+          const btn = document.createElement('button');
+          btn.className = 'ramo';
+          btn.textContent = ramo.nombre;
+          btn.id = ramo.id;
+
+          if (aprobados.has(ramo.id)) {
+            btn.classList.add('aprobado');
+            btn.disabled = true;
+          } else if (!puedeDesbloquear(ramo)) {
+            btn.classList.add('bloqueado');
+            btn.disabled = true;
+          }
+
+          btn.addEventListener('click', () => {
+            if (!btn.classList.contains('aprobado') && !btn.classList.contains('bloqueado')) {
+              aprobados.add(ramo.id);
+              localStorage.setItem('aprobados', JSON.stringify([...aprobados]));
+              renderMalla();
+            }
+          });
+
+          listaRamos.appendChild(btn);
+        });
+
+      divSemestre.appendChild(listaRamos);
+      mallaDiv.appendChild(divSemestre);
+    });
+  }
+
+  renderMalla();
+</script>
 </body>
 </html>
