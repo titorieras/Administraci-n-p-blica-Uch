@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Malla Interactiva - Administración Pública</title>
 <style>
+  /* Tu CSS igual que antes (el que te pasé) */
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f0f8ff;
@@ -12,26 +13,22 @@
     padding: 2rem;
     color: #1f2937;
   }
-
   .container {
     max-width: 1200px;
     margin: 0 auto;
     overflow-x: auto;
     padding-bottom: 1rem;
   }
-
   h1 {
     text-align: center;
     color: #1d4ed8;
     margin-bottom: 2rem;
     font-size: 2.2rem;
   }
-
   #malla {
     display: flex;
     gap: 1.5rem;
   }
-
   .semestre {
     background-color: white;
     border-left: 4px solid #3b82f6;
@@ -44,19 +41,16 @@
     max-height: 600px;
     overflow-y: auto;
   }
-
   .semestre h2 {
     font-size: 1.3rem;
     color: #1e3a8a;
     margin-bottom: 1rem;
   }
-
   .ramos-lista {
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
   }
-
   .ramo {
     background: #cce4ff;
     padding: 0.6rem 0.9rem;
@@ -71,12 +65,10 @@
     text-align: left;
     margin: 0;
   }
-
   .ramo:hover:not(.bloqueado):not(.aprobado) {
     background: #99ccff;
     transform: scale(1.03);
   }
-
   .ramo.aprobado {
     background: #d1e7dd;
     border-color: #198754;
@@ -84,7 +76,6 @@
     text-decoration: line-through;
     cursor: default;
   }
-
   .ramo.bloqueado {
     background: #e5e7eb;
     border-color: #cbd5e1;
@@ -101,18 +92,18 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+
   const ramos = [
     { id: "matematica1", nombre: "Matemática para la Gestión I", semestre: "1", requisitos: [] },
     { id: "gestion_publica", nombre: "Introducción a la Gestión Pública", semestre: "1", requisitos: [] },
     { id: "curso_libre1", nombre: "Curso Libre", semestre: "1", requisitos: [] },
-
     { id: "matematica2", nombre: "Matemática para la Gestión II", semestre: "2", requisitos: ["matematica1"] },
     { id: "cfg1", nombre: "CFG", semestre: "2", requisitos: [] },
     { id: "evolucion_admin", nombre: "Evolución y Complejidad de la Administración Pública", semestre: "2", requisitos: ["gestion_publica"] },
   ];
 
   let aprobados = new Set(JSON.parse(localStorage.getItem('aprobados')) || []);
-
   const mallaDiv = document.getElementById('malla');
 
   function esCFGoCursoLibre(ramo) {
@@ -189,6 +180,8 @@
   }
 
   renderMalla();
+
+});
 </script>
 </body>
 </html>
