@@ -96,5 +96,87 @@ const ramos = [
     "evaluacion_proyectos", "etica_direccion", "eco_sector_publico", "control_eval", "analisis_integrado",
     "planificacion", "negociacion", "gestion_territorial"
   ] },
+let aprobados = new Set(JSON.parse(localStorage.getItem('aprobados')) || []);
 
+const mallaDiv = document.getElementById('malla');
+
+function esCFGoCursoLibre(ramo) {
+  // Consideramos CFG y Curso Libre siempre desbloqueados
+  const nombre = ramo.nombre.toLowerCase();
+  return nombre.includes('cfg') || nombre.includes('curso libre');
+}
+
+function semestreAnterior(sem) {
+  return sem > 1 ? (sem - 1).toString() : null;
+}
+
+function todosAprobadosEnSemestre(semestre) {
+  // Revisa si todos los ramos de semestre dado están aprobados (excepto CFG y Curso Libre)
+  return ramos
+    .filter(r => r.semestre === semestre.toString())
+    .filter(r => !esCFGoCursoLibre(r))
+    .every(r => aprobados.has(r.id));
+}
+
+function puedeDesbloquear(ramo) {
+  if (aprobados.has(ramo.id)) return true; // ya aprobado, desbloqueado
+
+  if (esCFGoCursoLibre(ramo)) return true; // siempre desbloqueado
+
+  const semAnt = semestreAnterior(parseInt(ramo.semestre));
+  if (!semAnt) return true; // Si es semestre 1, desbloqueado
+
+  // Solo desbloquear si todos los ramos del semestre anterior están aprobados
+  return todosAprobadosEnSemestre(semAnt);
+}
+
+function renderMalla() {
+  mallaDiv.innerHTML = '';
+
+  // Agrupar ramos por semestre (ordenado)
+  const semestres = [...new Set(ramos.map(r => r.semestre))].sort((a,b) => a-b);
+
+  semestres.forEach(sem => {
+    const divSemestre = document.createElement('div');
+    divSemestre.className = 'semestre';
+
+    const h2 = document.createElement('h2');
+    h2.textContent = `Semestre ${sem}`;
+    divSemestre.appendChild(h2);
+
+    const listaRamos = document.createElement('div');
+    listaRamos.className = 'ramos-lista';
+
+    ramos.filter(r => r.semestre === sem)
+      .forEach(ramo => {
+        const btn = document.createElement('button');
+        btn.className = 'ramo';
+        btn.textContent = ramo.nombre;
+        btn.id = ramo.id;
+
+        if (aprobados.has(ramo.id)) {
+          btn.classList.add('aprobado');
+          btn.disabled = true;
+        } else if (!puedeDesbloquear(ramo)) {
+          btn.classList.add('bloqueado');
+          btn.disabled = true;
+        }
+
+        btn.addEventListener('click', () => {
+          if (!btn.classList.contains('aprobado')) {
+            aprobados.add(ramo.id);
+            localStorage.setItem('aprobados', JSON.stringify([...aprobados]));
+            renderMalla(); // refresca para actualizar estados
+          }
+        });
+
+        listaRamos.appendChild(btn);
+      });
+
+    divSemestre.appendChild(listaRamos);
+    mallaDiv.appendChild(divSemestre);
+  });
+}
+
+renderMalla();
 ];
