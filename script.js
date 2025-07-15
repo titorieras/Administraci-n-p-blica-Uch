@@ -1,1 +1,149 @@
+const ramos = [
+  // PRIMER AÑO - Semestre I
+  { id: "matematica1", nombre: "Matemática para la Gestión I", semestre: "1", requisitos: [] },
+  { id: "gestion_publica", nombre: "Introducción a la Gestión Pública", semestre: "1", requisitos: [] },
+  { id: "historia_inst", nombre: "Historia de las Instituciones Políticas y Administrativas de Chile", semestre: "1", requisitos: [] },
+  { id: "tecnologias_info", nombre: "Tecnologías y Sistemas de Información", semestre: "1", requisitos: [] },
+  { id: "bases_juridicas", nombre: "Bases Jurídicas para la Administración del Estado", semestre: "1", requisitos: [] },
+  { id: "ingles1", nombre: "Inglés I", semestre: "1", requisitos: [] },
+  { id: "curso_libre1", nombre: "Curso Libre", semestre: "1", requisitos: [] },
+
+  // Semestre II
+  { id: "matematica2", nombre: "Matemática para la Gestión II", semestre: "2", requisitos: ["matematica1"] },
+  { id: "evolucion_admin", nombre: "Evolución y Complejidad de la Administración Pública", semestre: "2", requisitos: ["gestion_publica"] },
+  { id: "ideas_debates", nombre: "Ideas y Debates Políticos Contemporáneos", semestre: "2", requisitos: [] },
+  { id: "epistemologia", nombre: "Epistemología de las Ciencias Sociales", semestre: "2", requisitos: [] },
+  { id: "normativo1", nombre: "Marco Normativo para la Acción Administrativa I", semestre: "2", requisitos: ["bases_juridicas"] },
+  { id: "ingles2", nombre: "Inglés II", semestre: "2", requisitos: ["ingles1"] },
+
+  // SEGUNDO AÑO - Semestre III
+  { id: "estadistica1", nombre: "Estadística para la Gestión I", semestre: "3", requisitos: ["matematica2"] },
+  { id: "dinamicas_admin", nombre: "Dinámicas de la Administración Pública Chilena", semestre: "3", requisitos: ["evolucion_admin"] },
+  { id: "fenomenos_politicos", nombre: "Estudio de los Fenómenos Políticos", semestre: "3", requisitos: ["ideas_debates"] },
+  { id: "metodologia", nombre: "Metodología de la Investigación en Administración Pública", semestre: "3", requisitos: ["epistemologia"] },
+  { id: "normativo2", nombre: "Marco Normativo para la Acción Administrativa II", semestre: "3", requisitos: ["normativo1"] },
+  { id: "ingles3", nombre: "Inglés III", semestre: "3", requisitos: ["ingles2"] },
+
+  // Semestre IV
+  { id: "estadistica2", nombre: "Estadística para la Gestión II", semestre: "4", requisitos: ["estadistica1"] },
+  { id: "diseno_org", nombre: "Diseño Organizacional", semestre: "4", requisitos: ["dinamicas_admin"] },
+  { id: "adm_pub_fenomenos", nombre: "La Administración Pública y los Fenómenos Políticos", semestre: "4", requisitos: ["fenomenos_politicos"] },
+  { id: "metodos_cualitativos", nombre: "Métodos Cualitativos para la Administración Pública", semestre: "4", requisitos: ["metodologia"] },
+  { id: "cfg1", nombre: "CFG", semestre: "4", requisitos: [] },
+  { id: "ingles4", nombre: "Inglés IV", semestre: "4", requisitos: ["ingles3"] },
+  { id: "comportamiento_humano", nombre: "Comportamiento Humano en la Organización", semestre: "4", requisitos: [] },
+
+  // TERCER AÑO - Semestre V
+  { id: "microeconomia", nombre: "Fenómenos Microeconómicos", semestre: "5", requisitos: ["estadistica2"] },
+  { id: "gestion_procesos", nombre: "Gestión de Procesos en Organizaciones Públicas", semestre: "5", requisitos: ["diseno_org"] },
+  { id: "analisis_internacional", nombre: "Análisis Político Internacional", semestre: "5", requisitos: ["fenomenos_politicos"] },
+  { id: "metodos_cuantitativos", nombre: "Métodos Cuantitativos para la Administración Pública", semestre: "5", requisitos: ["metodos_cualitativos"] },
+  { id: "bases_contables", nombre: "Bases Contables para la Gestión Pública", semestre: "5", requisitos: [] },
+  { id: "marco_analitico", nombre: "Marco Analítico de las Políticas Públicas", semestre: "5", requisitos: [] },
+
+  // Semestre VI
+  { id: "macroeconomia", nombre: "Fenómenos Macroeconómicos", semestre: "6", requisitos: ["microeconomia"] },
+  { id: "planificacion", nombre: "Planificación Estratégica de Organizaciones Públicas", semestre: "6", requisitos: [] },
+  { id: "negociacion", nombre: "Negociación y Toma de Decisiones", semestre: "6", requisitos: [] },
+  { id: "gestion_territorial", nombre: "Gestión Territorial y Descentralización", semestre: "6", requisitos: [] },
+  { id: "gestion_financiera", nombre: "Gestión Financiera y Presupuestaria del Estado", semestre: "6", requisitos: ["bases_contables"] },
+  { id: "formulacion_politicas", nombre: "Formulación e Implementación de Políticas Públicas", semestre: "6", requisitos: ["marco_analitico"] },
+  { id: "gestion_personas", nombre: "Gestión de Personas en Organizaciones Públicas", semestre: "6", requisitos: ["comportamiento_humano"] },
+
+  // CUARTO AÑO - Semestre VII
+  { id: "eco_sector_publico", nombre: "Economía del Sector Público", semestre: "7", requisitos: ["macroeconomia"] },
+  { id: "control_eval", nombre: "Control y Evaluación en Organizaciones Públicas", semestre: "7", requisitos: [] },
+  { id: "analisis_integrado", nombre: "Análisis Integrado de los Problemas Públicos", semestre: "7", requisitos: [
+    "microeconomia", "gestion_procesos", "metodos_cuantitativos", "bases_contables", "marco_analitico",
+    "ingles4", "normativo2", "adm_pub_fenomenos", "analisis_internacional", "historia_inst",
+    "tecnologias_info", "comportamiento_humano"
+  ]},
+  { id: "contabilidad_gubernamental", nombre: "Contabilidad Gubernamental", semestre: "7", requisitos: ["gestion_financiera"] },
+  { id: "eval_politicas", nombre: "Evaluación de Políticas Públicas", semestre: "7", requisitos: ["formulacion_politicas"] },
+  { id: "curso_libre2", nombre: "Curso Libre", semestre: "7", requisitos: [] },
+
+  // Semestre VIII
+  { id: "gestion_proyectos", nombre: "Gestión de Proyectos Sociales", semestre: "8", requisitos: [] },
+  { id: "simulacion", nombre: "Simulación de Asesoría", semestre: "8", requisitos: [] },
+  { id: "comunicacion", nombre: "Comunicación Estratégica y Marketing Político", semestre: "8", requisitos: [] },
+  { id: "seminario", nombre: "Seminario de Investigación Aplicada", semestre: "8", requisitos: [
+    "analisis_integrado", "eco_sector_publico", "gestion_personas", "contabilidad_gubernamental", "eval_politicas",
+    "planificacion", "negociacion", "gestion_territorial", "control_eval"
+  ]},
+  { id: "auditoria", nombre: "Auditoría Gubernamental", semestre: "8", requisitos: ["contabilidad_gubernamental"] },
+  { id: "analisis_empirico", nombre: "Análisis Empírico de Política Pública", semestre: "8", requisitos: ["eval_politicas"] },
+
+  // QUINTO AÑO - Semestre IX
+  { id: "evaluacion_proyectos", nombre: "Evaluación de Proyectos Sociales", semestre: "9", requisitos: [
+    "seminario", "gestion_proyectos", "simulacion", "comunicacion", "auditoria", "analisis_empirico",
+    "analisis_integrado", "eco_sector_publico", "gestion_personas", "control_eval", "eval_politicas",
+    "negociacion", "gestion_territorial", "planificacion"
+  ]},
+  { id: "electivo1", nombre: "Electivo I", semestre: "9", requisitos: [] },
+  { id: "electivo2", nombre: "Electivo II", semestre: "9", requisitos: [] },
+  { id: "electivo3", nombre: "Electivo III", semestre: "9", requisitos: [] },
+  { id: "cfg2", nombre: "CFG", semestre: "9", requisitos: [] },
+  { id: "electivo4", nombre: "Electivo IV", semestre: "9", requisitos: [] },
+  { id: "etica_direccion", nombre: "Dirección y Ética Pública", semestre: "9", requisitos: [
+    "seminario", "gestion_proyectos", "simulacion", "comunicacion", "auditoria", "analisis_empirico",
+    "analisis_integrado", "eco_sector_publico", "gestion_personas", "control_eval", "eval_politicas",
+    "negociacion", "gestion_territorial", "planificacion"
+  ]},
+
+  // Semestre X
+  { id: "practica", nombre: "Práctica Profesional", semestre: "10", requisitos: [
+    "evaluacion_proyectos", "etica_direccion", "eco_sector_publico", "control_eval", "analisis_integrado",
+    "planificacion", "negociacion", "gestion_territorial"
+  ] },
+];
+
+const mallaDiv = document.getElementById("malla");
+
+function crearMalla() {
+  const semestres = {};
+  ramos.forEach(r => {
+    if (!semestres[r.semestre]) semestres[r.semestre] = [];
+    semestres[r.semestre].push(r);
+  });
+
+  for (const [semestre, lista] of Object.entries(semestres)) {
+    const div = document.createElement("div");
+    div.className = "semestre";
+    const h2 = document.createElement("h2");
+    h2.textContent = `Semestre ${semestre}`;
+    div.appendChild(h2);
+
+    lista.forEach(r => {
+      const btn = document.createElement("button");
+      btn.textContent = r.nombre;
+      btn.id = r.id;
+      btn.className = "ramo";
+      if (r.requisitos.length > 0) btn.classList.add("bloqueado");
+      btn.onclick = () => aprobarRamo(r);
+      div.appendChild(btn);
+    });
+
+    mallaDiv.appendChild(div);
+  }
+}
+
+function aprobarRamo(ramo) {
+  const btn = document.getElementById(ramo.id);
+  if (btn.classList.contains("bloqueado") || btn.classList.contains("aprobado")) return;
+
+  btn.classList.add("aprobado");
+
+  ramos.forEach(r => {
+    if (r.requisitos.includes(ramo.id)) {
+      const desbloquear = r.requisitos.every(pr => {
+        return document.getElementById(pr)?.classList.contains("aprobado");
+      });
+      if (desbloquear) {
+        document.getElementById(r.id)?.classList.remove("bloqueado");
+      }
+    }
+  });
+}
+
+crearMalla();
 
